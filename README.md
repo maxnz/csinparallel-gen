@@ -11,7 +11,7 @@ This is a set of files that configure pi-gen to create a custom image for Hardwa
 - Clone pi-gen and this repository
 ```
 git clone https://github.com/RPi-Distro/pi-gen.git
-git clone git@stogit.cs.stolaf.edu:hd-image/pi-gen-hd-image.git
+git clone git@stogit.cs.stolaf.edu:hd-image/hd-image-gen.git
 ```
 
 - Install missing dependencies
