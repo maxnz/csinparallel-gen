@@ -21,7 +21,7 @@ sudo apt install quilt qemu-user-static debootstrap zerofree zip bsdtar
 
 - Copy modifications into `pi-gen`
 ```
-cp -r pi-gen-hd-image/pi-gen/* pi-gen/
+cp -r hd-image-gen/pi-gen/* pi-gen/
 ```
 
 - Add hd-admin password to config file
