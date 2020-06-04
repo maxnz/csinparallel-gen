@@ -4,7 +4,8 @@ This is a set of files that configure `pi-gen` to create a custom image for Hard
 ## General Overview
 The image uses `ansible-pull` to automatically update itself using a StoGit
 [repository](https://stogit.cs.stolaf.edu/hd-image/hd-image).
-This sets up everything needed to enable the automatic `ansible-pull` updates.
+This sets up everything needed to enable the automatic `ansible-pull` updates,
+including automatic connection to St. Olaf Wi-Fi and adding the hd-admin user.
 The image then takes care of updating itself from v3.0.0 to the latest version
 the next time it is booted.
 
