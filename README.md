@@ -16,7 +16,7 @@ The image then takes care of updating itself from v3.0.0 to the latest version t
 - Clone `pi-gen` and this repository
 ```
 git clone https://github.com/RPi-Distro/pi-gen.git
-git clone git@stogit.cs.stolaf.edu:hd-image/hd-image-gen.git
+git clone https://gitlab+deploy-token-15:798ax55zdqx4ABcBGWSk@stogit.cs.stolaf.edu/hd-image/hd-image-gen.git
 ```
 
 - Install missing dependencies
