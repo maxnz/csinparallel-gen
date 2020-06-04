@@ -2,4 +2,4 @@ IMG_NAME="hd-image-3.0.0"
 TIMEZONE_DEFAULT="America/Chicago"
 WPA_ESSID="St. Olaf Guest"
 ENABLE_SSH=1
-ADMIN_PASS=
+ADMIN_PASS=""
