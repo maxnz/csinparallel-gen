@@ -21,7 +21,7 @@ git clone https://gitlab+deploy-token-15:798ax55zdqx4ABcBGWSk@stogit.cs.stolaf.e
 
 - Install missing dependencies
 ```
-sudo apt install quilt qemu-user-static debootstrap zerofree zip bsdtar
+sudo apt install quilt qemu-user-static debootstrap zerofree zip bsdtar bc
 ```
 
 - Copy modifications into `pi-gen`
@@ -31,19 +31,20 @@ cp -r hd-image-gen/pi-gen/* pi-gen/
 
 - Add hd-admin password to config file (`pi-gen/config`)
 ```bash
-ADMIN_PASS=          # Put password on this line
+ADMIN_PASS=          # Put password on this line (in quotes)
 ```
 
 - Mount USB on `pi-gen/work`
 ```
 cd pi-gen
-sudo mount -o umask=000 /dev/disk/... work
+sudo mount /dev/disk/... work
 ```
 
 - Run build script
 ```
 sudo ./build.sh
 ```
+  - If there is an error saying that you're missing other dependencies, install those with apt like above
 
 ## More Detailed Overview
 
