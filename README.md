@@ -57,8 +57,8 @@ In the config file:
 - The image name is specified (`hd-image-3.0.0`)
 - The default locale is specified (`America/Chicago`)
 - The default SSID to connect to (`St. Olaf Guest`)
-- Enables SSH
-- Has a line where the hd-admin password should be added (see above).
+- SSH is enabled
+- There is a line where the hd-admin password should be added (see above)
 
 ##### Stage 2
 
