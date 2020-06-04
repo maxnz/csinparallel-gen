@@ -66,9 +66,14 @@ This image would be a lite version of the image, which is unnecessary and would 
 ##### Stage 4
 
 Stage 4 is where the customization happens:
-- The files required for the `ansible-pull` functionality are added to the image
-- The PiTracker systemd service is created and enabled
-- The hd-admin account is added
+
+- `00-packages`
+  - Installs required packages for the image
+
+- `01-run.sh`
+  - The files required for the `ansible-pull` functionality are added to the image
+  - The PiTracker systemd service is created and enabled
+  - The hd-admin account is added
 
 ##### Stage 5
 
