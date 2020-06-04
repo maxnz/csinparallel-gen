@@ -1,5 +1,5 @@
-# HD Image pi-gen
-This is a set of files that configure pi-gen to create a custom image for Hardware Design.
+# HD Image Generation using `pi-gen`
+This is a set of files that configure `pi-gen` to create a custom image for Hardware Design.
 
 
 ## Requirements
@@ -8,7 +8,7 @@ This is a set of files that configure pi-gen to create a custom image for Hardwa
 
 
 ## Usage
-- Clone pi-gen and this repository
+- Clone `pi-gen` and this repository
 ```
 git clone https://github.com/RPi-Distro/pi-gen.git
 git clone git@stogit.cs.stolaf.edu:hd-image/hd-image-gen.git
@@ -24,7 +24,7 @@ sudo apt install quilt qemu-user-static debootstrap zerofree zip bsdtar
 cp -r hd-image-gen/pi-gen/* pi-gen/
 ```
 
-- Add hd-admin password to config file
+- Add hd-admin password to config file (`pi-gen/config`)
 ```bash
 ADMIN_PASS=          # Put password on this line
 ```
