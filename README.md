@@ -14,19 +14,19 @@ The image then takes care of updating itself from v3.0.0 to the latest version t
 
 ## Usage
 - Clone `pi-gen` and this repository
-```
+```bash
 git clone https://github.com/RPi-Distro/pi-gen.git
 git clone https://gitlab+deploy-token-15:798ax55zdqx4ABcBGWSk@stogit.cs.stolaf.edu/hd-image/hd-image-gen.git
 ```
 
 - Install missing dependencies
-```
+```bash
 sudo apt update
 sudo apt install quilt qemu-user-static debootstrap zerofree zip bsdtar bc
 ```
 
 - Copy modifications into `pi-gen`
-```
+```bash
 cp -r hd-image-gen/pi-gen/* pi-gen/
 ```
 
@@ -36,16 +36,23 @@ ADMIN_PASS=""          # Put password on this line (in the quotes)
 ```
 
 - Mount USB on `pi-gen/work`
-```
+```bash
 cd pi-gen
-sudo mount /dev/disk/... work    # Figure out which disk and partition you want and use that to replace the ...
+sudo mount /dev/disk/... work
+  # Figure out which disk and partition you want and use that to replace the ...
+  # e.g. sudo mount /dev/disk/by-id/usb-SanDisk_Ultra_Fit_4C530001210711101134-0\:0-part1 work
 ```
 
 - Run build script
-```
+```bash
 sudo ./build.sh
 ```
 *If there is an error saying that you're missing other dependencies, install those with apt like above*
+
+- The image will take a while to build, somewhere in the neighborhood of a couple hours
+- The work the scripts are doing is stored in a subdirectory of work, named `$DATE-$IMG_NAME`
+- The final image will be stored in `work/$WORK_DIR/export-image`
+- A copy of the image for use with [NOOBS (New Out Of Box Software)](https://www.raspberrypi.org/help/noobs-setup/2/) is located in `work/$WORK_DIR/export-noobs`
 
 ## More Detailed Overview
 
