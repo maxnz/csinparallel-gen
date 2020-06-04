@@ -1,11 +1,16 @@
 # HD Image Generation using `pi-gen`
 This is a set of files that configure `pi-gen` to create a custom image for Hardware Design.
 
+## General Overview
+The image uses `ansible-pull` to automatically update itself using a StoGit
+[repository](https://stogit.cs.stolaf.edu/hd-image/hd-image).
+This sets up everything needed to enable the automatic `ansible-pull` updates.
+The image then takes care of updating itself from v3.0.0 to the latest version
+the next time it is booted.
 
 ## Requirements
 - Raspberry Pi 3B/3B+/4B running Raspbian Buster
 - USB flash drive with 64GB of space or more
-
 
 ## Usage
 - Clone `pi-gen` and this repository
