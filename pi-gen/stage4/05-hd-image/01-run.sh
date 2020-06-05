@@ -40,3 +40,6 @@ fi
 echo "hd-admin:${ADMIN_PASS}" | chpasswd
 adduser hd-admin sudo
 EOF
+
+rm "${ROOTFS_DIR}/etc/xdg/autostart/piwiz.desktop"
+echo "Removed piwiz.desktop file (preventing Welcome to Raspberry Pi window from appearing)"
