@@ -39,8 +39,8 @@ ADMIN_PASS=""          # Put password on this line (in the quotes)
 ```bash
 cd pi-gen
 sudo mount /dev/disk/... work
-  # Figure out which disk and partition you want and use that to replace the ...
-  # e.g. sudo mount /dev/disk/by-id/usb-SanDisk_Ultra_Fit_4C530001210711101134-0\:0-part1 work
+# Replace the ... with the disk and partition you want to use,
+# for example, sudo mount /dev/disk/by-id/usb-SanDisk_Ultra_Fit_4C530001210711101134-0\:0-part1 work
 ```
 
 - Run build script
