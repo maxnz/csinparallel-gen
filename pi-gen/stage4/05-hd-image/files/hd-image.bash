@@ -94,7 +94,7 @@ update() {
     do
         if [ $tries -gt 10 ]
         then
-            /usr/bin/logger "Could not connect to internet"
+            /usr/bin/logger -t PiTracker "Could not connect to internet"
             exit 1
         fi
         sleep 10
