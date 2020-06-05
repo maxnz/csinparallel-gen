@@ -14,8 +14,13 @@ install -m 777 files/hd-image.bash "${ROOTFS_DIR}/usr/HD"
 install -m 777 files/PiTracker.bash "${ROOTFS_DIR}/usr/HD"
 echo "Populated HD directory"
 
+if [ -f "${ROOTFS_DIR}/usr/bin/hd-image" ]
+then
+     rm "${ROOTFS_DIR}/usr/bin/hd-image"
+fi
+
 # Create a symbolic link so hd-image can be run without an explicit path
-ln -s "${ROOTFS_DIR}/usr/HD/hd-image.bash" "${ROOTFS_DIR}/usr/bin/hd-image"
+ln -s "/usr/HD/hd-image.bash" "${ROOTFS_DIR}/usr/bin/hd-image"
 echo "Created hd-image symlink"
 
 # Add PiTracker.service to systemd service files
@@ -24,7 +29,6 @@ echo "Added PiTracker service"
 
 # Reload systemd and enable PiTracker service
 on_chroot << EOF
-# systemctl daemon-reload
 systemctl enable PiTracker.service
 EOF
 
