@@ -50,7 +50,7 @@ sudo ./build.sh
 *If there is an error saying that you're missing other dependencies, install those with apt like above*
 
 - The image will take a while to build, somewhere in the neighborhood of a couple hours
-- The work the scripts are doing is stored in a subdirectory of work, named `$DATE-$IMG_NAME`
+- The working directory for the scripts is a subdirectory of work, named `$DATE-$IMG_NAME`
 - The final image will be stored in `work/$WORK_DIR/export-image`
 - A copy of the image for use with [NOOBS (New Out Of Box Software)](https://www.raspberrypi.org/help/noobs-setup/2/) is located in `work/$WORK_DIR/export-noobs`
 
