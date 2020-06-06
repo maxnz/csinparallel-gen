@@ -3,4 +3,4 @@ TIMEZONE_DEFAULT="America/Chicago"
 WPA_ESSID="St. Olaf Guest"
 WPA_COUNTRY="US"
 ENABLE_SSH=1
-ADMIN_PASS=""
+export ADMIN_PASS=""
