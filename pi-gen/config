@@ -5,7 +5,7 @@ WPA_COUNTRY="US"
 ENABLE_SSH=1
 export ADMIN_PASS=""
 
-if [ ! -v "$ADMIN_PASS" ]
+if [ ! -v ADMIN_PASS ]
 then
     echo "ADMIN_PASS must be populated in config"
     exit 1
