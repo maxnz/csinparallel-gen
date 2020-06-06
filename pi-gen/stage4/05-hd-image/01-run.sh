@@ -16,7 +16,7 @@ echo "Added hd-image user"
 
 # Prevent Welcome to Raspberry Pi window from appearing
 
-rm "${ROOTFS_DIR}/etc/xdg/autostart/piwiz.desktop"
+rm -f "${ROOTFS_DIR}/etc/xdg/autostart/piwiz.desktop"
 echo "Removed piwiz.desktop file"
 
 
