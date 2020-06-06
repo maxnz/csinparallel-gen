@@ -37,12 +37,7 @@ install -m 777 files/hd-image.bash "${ROOTFS_DIR}/usr/HD"
 install -m 777 files/PiTracker.bash "${ROOTFS_DIR}/usr/HD"
 echo "Populated HD directory"
 
-if [ -f "${ROOTFS_DIR}/usr/bin/hd-image" ]
-then
-     rm "${ROOTFS_DIR}/usr/bin/hd-image"
-fi
-
-ln -s "/usr/HD/hd-image.bash" "${ROOTFS_DIR}/usr/bin/hd-image"
+ln -f -s "/usr/HD/hd-image.bash" "${ROOTFS_DIR}/usr/bin/hd-image"
 echo "Created hd-image symlink"
 
 install -m 644 files/PiTracker.service "${ROOTFS_DIR}/lib/systemd/system/PiTracker.service"
