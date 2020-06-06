@@ -48,3 +48,9 @@ systemctl enable PiTracker.service
 EOF
 echo "Enabled PiTracker to run at startup"
 
+
+# Temporary workaround for https://github.com/RPi-Distro/pi-gen/issues/414 until it's updated
+
+echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-3f300000.mmcnr:wlan"
+echo 0 > "${ROOTFS_DIR}/var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan"
+
