@@ -11,6 +11,11 @@ The image then takes care of updating itself from v3.0.0 to the latest version t
 ## Requirements
 - Raspberry Pi 3B/3B+/4B running Raspbian Buster
 - USB flash drive with 64GB of space or more
+  - The USB should have a Linux filesystem, such as ext4
+  - If you need to image it to the correct filesystem, run `sudo mkfs.ext4 /dev/...`, replacing the `...` with the correct disk partition (i.e. `/dev/sda1`)
+    - Make sure the partition is not mounted anywhere
+    - When prompted, enter `y` to confirm you want to overwrite the filesystem
+
 
 ## Usage
 - Clone `pi-gen` and this repository
@@ -40,7 +45,7 @@ ADMIN_PASS=""          # Put password on this line (in the quotes)
 cd pi-gen
 sudo mount /dev/... work
 # Replace the ... with the disk and partition you want to use,
-# for example, sudo mount /dev/sdb1 work
+# for example, sudo mount /dev/sda1 work
 ```
 
 - Run build script
