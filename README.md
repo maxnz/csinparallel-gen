@@ -63,7 +63,7 @@ sudo ./build.sh
 
 This repository modifies stages 2, 3 and 5 of `pi-gen`, as well as gives the config file needed.
 
-##### Config
+#### Config
 
 Multiple things happen in the config file:
 - Variables are set
@@ -80,12 +80,12 @@ Multiple things happen in the config file:
     - This if statement checks that the `ADMIN_PASS` variable was set.
       This prevents the issue where you forgot to set the variable and the build runs for a long time, just to fail at the end of stage 4.
 
-##### Stage 2
+#### Stage 2
 
 The file `SKIP_IMAGES` is added to the `stage2` directory, making that stage skip creating an image.
 This image would be a lite version of the image, which is unnecessary for our purposes.
 
-##### Stage 4
+#### Stage 4
 
 Stage 4 is where the customization happens:
 
@@ -101,12 +101,12 @@ Stage 4 is where the customization happens:
   - The files required for the `ansible-pull` functionality are added to the image
   - The PiTracker systemd service is created and enabled
 
-  - *Notes*
-    - The `on_chroot << EOF; EOF` idiom is equivalent to running the commands in it as root (i.e. with `sudo`)
-      - `on_chroot` is a part of `pi-gen`, [located here](https://github.com/RPi-Distro/pi-gen/blob/master/scripts/common)
-    - Make sure any `##-run.sh` files are executable, otherwise they won't run and there will be no indication as to why they didn't run
+###### *Notes*
+  - The `on_chroot << EOF; EOF` idiom is equivalent to running the commands in it as root (i.e. with `sudo`)
+    - `on_chroot` is a part of `pi-gen`, [located here](https://github.com/RPi-Distro/pi-gen/blob/master/scripts/common)
+  - Make sure any `##-run.sh` files are executable, otherwise they won't run and there will be no indication as to why they didn't run
 
-##### Stage 5
+#### Stage 5
 
 The files `SKIP` and `SKIP_IMAGES` are added to the `stage5` directory.
 The `SKIP_IMAGES` file does the same thing it does in the `stage2` directory.
