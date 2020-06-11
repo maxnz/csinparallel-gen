@@ -1,12 +1,10 @@
-# HD Image Generation using `pi-gen`
-This is a set of files that configure [`pi-gen`](https://github.com/RPi-Distro/pi-gen) to create a custom image for Hardware Design.
+# CSinParallel Image Generation using `pi-gen`
+This is a set of files that configure [`pi-gen`](https://github.com/RPi-Distro/pi-gen) to create a custom image for CSinParallel.
 
 ## General Overview
-The image uses `ansible-pull` to automatically update itself using a StoGit [repository](https://stogit.cs.stolaf.edu/hd-image/hd-image) (see the repo for more details).
+The image uses `ansible-pull` to automatically update itself using a [GitHub repository](https://github.com/babatana/csinparallel-image) (see the repo for more details).
 
-This modification to `pi-gen` sets up everything needed to enable the automatic `ansible-pull` updates, as well as automatic connection to St. Olaf Guest and adding the hd-admin user.
-
-The image then takes care of updating itself from v3.0.0 to the latest version the next time it is booted.
+This modification to `pi-gen` sets up everything needed to enable updating via `ansible-pull`.
 
 ## Requirements
 - Raspberry Pi 3B/3B+/4B running Raspbian Buster
@@ -21,7 +19,7 @@ The image then takes care of updating itself from v3.0.0 to the latest version t
 - Clone `pi-gen` and this repository
 ```bash
 git clone https://github.com/RPi-Distro/pi-gen.git
-git clone https://gitlab+deploy-token-15:798ax55zdqx4ABcBGWSk@stogit.cs.stolaf.edu/hd-image/hd-image-gen.git
+git clone https:/github.com/maxnz/csinparallel-gen.git
 ```
 
 - Install missing dependencies
@@ -32,12 +30,7 @@ sudo apt install quilt qemu-user-static debootstrap zerofree zip bsdtar bc
 
 - Copy modifications into `pi-gen`
 ```bash
-cp -r hd-image-gen/pi-gen/* pi-gen/
-```
-
-- Add hd-admin password to config file (`pi-gen/config`)
-```bash
-ADMIN_PASS=""          # Put password on this line (in the quotes)
+cp -r csinparallel-gen/pi-gen/* pi-gen/
 ```
 
 - Mount USB on `pi-gen/work`
@@ -67,18 +60,8 @@ This repository modifies stages 2, 3 and 5 of `pi-gen`, as well as gives the con
 
 Multiple things happen in the config file:
 - Variables are set
-  - `IMAGE_NAME` - The name of the image, used to specify the output name (`hd-image-3.0.0`)
-  - `TIMEZONE_DEFAULT` - Sets the timezone (`America/Chicago`)
-  - `WPA_ESSID` - The SSID to connect to automatically (`St. Olaf Guest`)
-  - `WPA_COUNTRY` - The country code for the country the Pi will be used in (`US`)
+  - `IMAGE_NAME` - The name of the image, used to specify the output name (`csip-image-3.0.0`)
   - `ENABLE_SSH` - SSH is enabled when set to `1` (`1`)
-
-- hd-admin account password is set
-  - `export ADMIN_PASS` - The password for the hd-admin account is set here (see above)
-    - Note the `export` - this is because the other variables are exported by the `build.sh` script, so for our own custom variables we have to export them ourselves
-  - `if [ -z "$ADMIN_PASS" ] then; echo "ADMIN_PASS must be populated in config"; exit 1; fi`
-    - This if statement checks that the `ADMIN_PASS` variable was set.
-      This prevents the issue where you forgot to set the variable and the build runs for a long time, just to fail at the end of stage 4.
 
 #### Stage 2
 
@@ -93,13 +76,8 @@ Stage 4 is where the customization happens:
   - Installs more packages for the image (i.e. `vim`, `emacs`, etc.)
 
 - `01-run.sh`
-  - The hd-admin account is added
-  - The `/etx/xdg/autostart/piwiz.desktop` file is removed
-    - This is what causes the "Welcome to Raspberry Pi" window to show up on startup (according to [this forum thread](https://www.raspberrypi.org/forums/viewtopic.php?t=231557))
-    - Because we are already setting everything it would set as a part of our setup, we don't need it to show up
   - `ansible`, and thus `ansible-pull`, are installed
   - The files required for the `ansible-pull` functionality are added to the image
-  - The PiTracker systemd service is created and enabled
 
 ###### *Notes*
   - The `on_chroot << EOF; EOF` idiom is equivalent to running the commands in it as root (i.e. with `sudo`)
@@ -111,5 +89,4 @@ Stage 4 is where the customization happens:
 The files `SKIP` and `SKIP_IMAGES` are added to the `stage5` directory.
 The `SKIP_IMAGES` file does the same thing it does in the `stage2` directory.
 The `SKIP` file has the scripts skip stage 5 completely.
-Stage 5 adds extra software to the image that students don't actually need (such as LibreOffice, etc.).
-I also wasn't able to make the scripts work with stage 5 enabled.
+Stage 5 adds extra software to the image that we don't actually need (such as LibreOffice, etc.).
