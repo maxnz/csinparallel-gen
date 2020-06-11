@@ -1,13 +1,2 @@
-IMG_NAME="hd-image-3.0.0"
-TIMEZONE_DEFAULT="America/Chicago"
-LOCALE_DEFAULT="en_US.UTF-8"
-WPA_ESSID="St. Olaf Guest"
-WPA_COUNTRY="US"
+IMG_NAME="csip-image-3.0.0"
 ENABLE_SSH=1
-export ADMIN_PASS=""
-
-if [ -z "$ADMIN_PASS" ]
-then
-    echo "ADMIN_PASS must be populated in config"
-    exit 1
-fi

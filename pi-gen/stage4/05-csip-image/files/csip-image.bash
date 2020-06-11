@@ -1,21 +1,22 @@
 #!/bin/bash
 
-# hd-image: a tool for managing the HD Image
+# csinparallel-image: a tool for managing the HD Image
 # Created by Max Narvaez
 
 IMAGEVER=`cat /usr/HD/version`
 BRANCH=
 
 show_help() {
-    echo "Hardware Design Image Tool $IMAGEVER"
+    echo "CSinParallel Image Tool $IMAGEVER"
     echo
-    echo "Usage: hd-image [-h|-v|info|report|update|git-fsck|reset-wallpaper]"
+    echo "A tool for managing your CSinParallel image"
+    echo
+    echo "Usage: csip-image [-h|-v|info|update|git-fsck|reset-wallpaper]"
     echo "Options:"
     echo "-h                show this help message"
     echo "-v                show the current version of the image"
     echo
     echo "info              show information about this Pi"
-    echo "report            send info to PiTracker server"
     echo "update            check for image updates"
     echo
     echo "git-fsck          check all git repositories for errors"
@@ -24,11 +25,11 @@ show_help() {
 }
 
 show_update_help() {
-    echo "Hardware Design Image Tool $IMAGEVER"
+    echo "CSinParallel Image Tool $IMAGEVER"
     echo
-    echo "hd-image update"
+    echo "csip-image update"
     echo
-    echo "Usage: hd-image update [-h|-b BRANCH|-v VERSION]"
+    echo "Usage: csip-image update [-h|-b BRANCH|-v VERSION]"
     echo "Options:"
     echo "-h            show this help message"
     echo "-b BRANCH     set the branch to update from"
@@ -57,7 +58,6 @@ info() {
     MAC=`ifconfig wlan0 | grep ether | sed 's/  \+/ /g' | cut -d ' ' -f 3`
     SDSERIAL=`cat /sys/block/mmcblk0/device/cid`
     HARDREV=`cat /proc/cpuinfo | grep Revision | cut -d ' ' -f 2`
-    OWNER=`cat /etc/owner`
 
     echo "Image Version:        $IMAGEVER"
     echo "Hardware Revision:    $HARDREV"
@@ -65,7 +65,6 @@ info() {
     echo "SD Serial Number:     $SDSERIAL"
     echo "WiFi IP:              $IP"
     echo "WiFi MAC:             $MAC"
-    echo "Owner:                $OWNER"
 }
 
 git_fsck() {
@@ -83,35 +82,25 @@ git_fsck() {
     done
 }
 
-report() {
-    /usr/HD/PiTracker.bash
-}
-
 update() {
     # Test for internet connection
     tries=0
     while ! ping -c 1 -W 2 8.8.8.8 &> /dev/null
     do
-        if [ $tries -gt 10 ]
+        if [ $tries -gt 3 ]
         then
-            /usr/bin/logger -t PiTracker "Could not connect to internet"
+            /usr/bin/logger -t csip-image "Could not connect to internet"
             exit 1
         fi
         sleep 10
         let "tries++"
     done
 
-    if [ -z $BRANCH ]
-    then
-        BRANCH="master"
-    fi
-    BRANCH="-C $BRANCH"
-
     /usr/local/bin/ansible-pull \
-    -U https://gitlab+deploy-token-12:sErpRQP96JzfVponpBh-@stogit.cs.stolaf.edu/hd-image/hd-image.git \
-    -e imgVersion=$IMAGEVER $BRANCH
+    -U https://github.com/babatana/csinparallel-image.git \
+    -e imgVersion=$IMAGEVER -C ${BRANCH:-master}
 
-    report | /usr/bin/logger -t PiTracker
+    report | /usr/bin/logger -t csip-image
 }
 
 if test $# -eq 0
@@ -170,11 +159,6 @@ do
         info)
             shift
             info
-            exit 0
-            ;;
-        report)
-            shift
-            report
             exit 0
             ;;
         git-fsck)
