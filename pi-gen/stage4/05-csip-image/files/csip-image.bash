@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# csinparallel-image: a tool for managing the CSiP Image
+# csinparallel-image: a tool for managing the CSinParallel Image
 # Created by Max Narvaez
 
 IMAGEVER=`cat /usr/CSiP/version`
