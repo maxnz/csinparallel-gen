@@ -1,11 +1,5 @@
 #!/bin/bash -e
 
-# Prevent Welcome to Raspberry Pi window from appearing
-
-rm -f "${ROOTFS_DIR}/etc/xdg/autostart/piwiz.desktop"
-echo "Removed piwiz.desktop file"
-
-
 # Install Ansible
 
 on_chroot << EOF
