@@ -59,10 +59,9 @@ This repository modifies stages 2, 3 and 5 of `pi-gen`, as well as gives the con
 
 #### Config
 
-Multiple things happen in the config file:
-- Variables are set
-  - `IMAGE_NAME` - The name of the image, used to specify the output name (`csip-image-3.0.0`)
-  - `ENABLE_SSH` - SSH is enabled when set to `1` (`1`)
+Some variables are set in the config:
+- `IMAGE_NAME` - The name of the image, used to specify the output name (`csip-image-3.0.0`)
+- `ENABLE_SSH` - SSH is enabled when set to `1` (`1`)
 
 #### Stage 2
 
