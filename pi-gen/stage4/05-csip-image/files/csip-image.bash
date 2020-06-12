@@ -3,7 +3,7 @@
 # csinparallel-image: a tool for managing the CSiP Image
 # Created by Max Narvaez
 
-IMAGEVER=`cat /usr/HD/version`
+IMAGEVER=`cat /usr/CSiP/version`
 BRANCH=
 
 show_help() {
