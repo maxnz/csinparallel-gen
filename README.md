@@ -3,6 +3,7 @@ This is a set of files that configure [`pi-gen`](https://github.com/RPi-Distro/p
 
 ## General Overview
 The image uses `ansible-pull` to automatically update itself using a [GitHub repository](https://github.com/babatana/csinparallel-image) (see the repo for more details).
+*(After the first update, it will disable auto-updates, though they can be turned on again and will then stay on).*
 
 This modification to `pi-gen` sets up everything needed to enable updating via `ansible-pull`.
 
