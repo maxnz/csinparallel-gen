@@ -99,8 +99,6 @@ update() {
     /usr/local/bin/ansible-pull \
     -U https://github.com/babatana/csinparallel-image.git \
     -e imgVersion=$IMAGEVER -C ${BRANCH:-master}
-
-    report | /usr/bin/logger -t csip-image
 }
 
 if test $# -eq 0
