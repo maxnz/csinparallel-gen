@@ -44,17 +44,7 @@ missing_argument() {
 
 info() {
     SERIAL=`cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2`
-    IP=`hostname -I`
-    ipa=1
-    for ip in $IP
-    do
-        j=`echo $ip | cut -d ' ' -f $ipa`
-        if echo $j | grep "10.44." &> /dev/null
-        then
-            IP=$j
-            break
-        fi
-    done
+    IPv4=`ifconfig wlan0 | grep "inet " | sed 's/  \+/ /g' | cut -d ' ' -f 3`
     MAC=`ifconfig wlan0 | grep ether | sed 's/  \+/ /g' | cut -d ' ' -f 3`
     SDSERIAL=`cat /sys/block/mmcblk0/device/cid`
     HARDREV=`cat /proc/cpuinfo | grep Revision | cut -d ' ' -f 2`
@@ -63,7 +53,7 @@ info() {
     echo "Hardware Revision:    $HARDREV"
     echo "Pi Serial Number:     $SERIAL"
     echo "SD Serial Number:     $SDSERIAL"
-    echo "WiFi IP:              $IP"
+    echo "WiFi IP:              $IPv4"
     echo "WiFi MAC:             $MAC"
 }
 
