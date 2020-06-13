@@ -32,11 +32,6 @@ echo "Created csip-image symlink"
 install -m 644 files/Updater.service "${ROOTFS_DIR}/lib/systemd/system/Updater.service"
 echo "Added Updater service"
 
-on_chroot << EOF
-systemctl enable Updater.service
-EOF
-echo "Enabled Updater to run at startup on first run"
-
 
 # Set Keyboard Locale
 
