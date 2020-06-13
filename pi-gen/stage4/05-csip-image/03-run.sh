@@ -5,10 +5,10 @@
 # Add CSinParallel directory
 
 wget http://csinparallel.cs.stolaf.edu/CSinParallel.tar.gz
-tar -xf CSinParallel.tar.gz "${ROOTFS_DIR}/etc/skel/CSinParallel"
+tar -xf CSinParallel.tar.gz -C "${ROOTFS_DIR}/etc/skel"
 echo "Add CSinParallel directory"
 
-tar -xf CSinParallel.tar.gz "${ROOTFS_DIR}/home/pi/CSinParallel"
+tar -xf CSinParallel.tar.gz -C "${ROOTFS_DIR}/home/pi"
 on_chroot << EOF
 chown -R pi:pi "/home/pi/CSinParallel"
 EOF
