@@ -1,5 +1,15 @@
 #!/bin/bash -e
 
+#### Equivalent to ansible-pull for v3.0.0 (https://github.com/babatana/csinparallel-image/blob/master/updates/3.0.0.yaml)
+
+# Enable VNC Server
+
+on_chroot << EOF
+systemctl enable vncserver-x11-serviced.service
+EOF
+echo "Enabled VNC server"
+
+
 # Install Ansible
 
 on_chroot << EOF
