@@ -2,7 +2,7 @@
 
 #### Equivalent to ansible-pull for v3.0.1 (https://github.com/babatana/csinparallel-image/blob/master/updates/3.0.1.yaml)
 
-cat << EOF
+cat << EOF >> "${ROOTFS_DIR}/etc/dhcpcd.conf"
 interface eth0
 metric 302
 static ip_address=10.0.0.254
@@ -13,3 +13,5 @@ nolink
 interface wlan0
 metric 202
 EOF
+
+echo  Set static IP 
