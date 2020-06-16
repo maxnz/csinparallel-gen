@@ -20,7 +20,7 @@ echo "Add CSinParallel directory to pi user"
 cat << EOF >> "${ROOTFS_DIR}/home/pi/.bashrc"
 if [ -e /usr/CSiP/.updated ]
 then 
-    cowsay CSiP Image has been updated to v$(cat /usr/CSiP/version)
+    cowsay CSiP Image has been updated to v\$(cat /usr/CSiP/version)
     rm /usr/CSiP/.updated
 fi
 EOF
@@ -28,7 +28,7 @@ EOF
 cat << EOF >> "${ROOTFS_DIR}/etc/skel/.bashrc"
 if [ -e /usr/CSiP/.updated ]
 then 
-    cowsay CSiP Image has been updated to v$(cat /usr/CSiP/version)
+    cowsay CSiP Image has been updated to v\$(cat /usr/CSiP/version)
     rm /usr/CSiP/.updated
 fi
 EOF
