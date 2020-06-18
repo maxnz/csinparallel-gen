@@ -55,7 +55,7 @@ sudo ./build.sh
 
 ## More Detailed Overview
 
-This repository modifies stages 2, 3 and 5 of `pi-gen`, as well as gives the config file needed.
+This repository modifies stages 2, 4 and 5 of `pi-gen`, as well as gives the config file needed.
 
 #### Config
 
