@@ -8,9 +8,9 @@ cat << EOF >> "${ROOTFS_DIR}/etc/dhcpcd.conf"
 
 interface eth0
 metric 302
-static ip_address=10.127.0.254
-static routers=10.127.0.1
-static domain_name_servers=10.127.0.1
+static ip_address=172.27.0.254
+static routers=172.27.0.1
+static domain_name_servers=172.27.0.1
 nolink
 
 interface wlan0
@@ -38,12 +38,12 @@ cat << EOF >> "${ROOTFS_DIR}/etc/dhcp/dhcpd.conf"
 default-lease-time 600;
 max-lease-time 7200;
 option subnet-mask 255.255.255.0;
-option broadcast-address 10.127.0.255;
-option routers 10.127.0.254;
-option domain-name-servers 10.127.0.1;
+option broadcast-address 172.27.0.255;
+option routers 172.27.0.254;
+option domain-name-servers 172.27.0.1;
 
-subnet 10.127.0.0 netmask 255.255.255.0 {
-    range 10.127.0.2 10.127.0.253;
+subnet 172.27.0.0 netmask 255.255.255.0 {
+    range 172.27.0.2 172.27.0.253;
 }
 EOF
 echo "Configure DHCP server Part 3"
