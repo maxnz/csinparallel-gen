@@ -29,11 +29,14 @@ show_update_help() {
     echo
     echo "csip-image update"
     echo
-    echo "Usage: csip-image update [-h|-b BRANCH|-v VERSION]"
+    echo "Usage: csip-image update [-h] [--branch BRANCH]" 
+    echo "                         [--version-override VERSION]"
     echo "Options:"
-    echo "-h            show this help message"
-    echo "-b BRANCH     set the branch to update from"
-    echo "-v VERSION    override the version number"
+    echo "-h                Show this help message"
+    echo "-b BRANCH, --branch BRANCH"
+    echo "                  Set the branch to update from"
+    echo "-v VERSION, --version-override VERSION"
+    echo "                  Override the version number"
     exit 0
 }
 
@@ -116,7 +119,7 @@ do
                     -h|help)
                         show_update_help
                         ;;
-                    -b)
+                    -b|--branch)
                         shift
                         if test $# -gt 0
                         then
@@ -126,7 +129,7 @@ do
                             missing_argument "-b"
                         fi
                         ;;
-                    -v)
+                    -v|--version-override)
                         shift
                         if test $# -gt 0
                         then
