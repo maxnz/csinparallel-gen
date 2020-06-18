@@ -2,10 +2,7 @@
 This is a set of files that configure [`pi-gen`](https://github.com/RPi-Distro/pi-gen) to create a custom image for CSinParallel.
 
 ## General Overview
-The image uses `ansible-pull` to automatically update itself using a [GitHub repository](https://github.com/babatana/csinparallel-image) (see the repo for more details).
-*(After the first update, it will disable auto-updates, though they can be turned on again and will then stay on).*
-
-This modification to `pi-gen` sets up everything needed to enable updating via `ansible-pull`.
+This modification to `pi-gen` sets up everything for the CSinParallel image.
 
 ## Requirements
 - Raspberry Pi 3B/3B+/4B running Raspbian Buster
@@ -60,7 +57,7 @@ This repository modifies stages 2, 4 and 5 of `pi-gen`, as well as gives the con
 #### Config
 
 Some variables are set in the config:
-- `IMAGE_NAME` - The name of the image, used to specify the output name (`csip-image-3.0.0`)
+- `IMAGE_NAME` - The name of the image, used to specify the output name (`csip-image-3.0.2`)
 - `ENABLE_SSH` - SSH is enabled when set to `1` (`1`)
 
 #### Stage 2
@@ -70,14 +67,8 @@ This image would be a lite version of the image, which is unnecessary for our pu
 
 #### Stage 4
 
-Stage 4 is where the customization happens:
-
-- `00-packages`
-  - Installs more packages for the image (i.e. `vim`, `emacs`, etc.)
-
-- `01-run.sh`
-  - `ansible`, and thus `ansible-pull`, are installed
-  - The files required for the `ansible-pull` functionality are added to the image
+Stage 4 is where the customization happens.
+See the [Build Process Chart](https://app.creately.com/diagram/NY4OaT6UQpf/view) for an overview of what happens.
 
 ###### *Notes*
   - The `on_chroot << EOF; EOF` idiom is equivalent to running the commands in it as root (i.e. with `sudo`)
