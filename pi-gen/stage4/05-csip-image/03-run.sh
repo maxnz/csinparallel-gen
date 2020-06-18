@@ -3,10 +3,10 @@
 #### Equivalent to ansible-pull for v3.0.2 (https://github.com/babatana/csinparallel-image/blob/master/updates/3.0.2.yaml)
 
 # Add CSinParallel directory
-git clone "https://github.com/csinparallel/virtual20-code.git ${ROOTFS_DIR}/etc/skel/CSinParallel"
+git clone https://github.com/csinparallel/virtual20-code.git "${ROOTFS_DIR}/etc/skel/CSinParallel"
 echo "Cloned csinparallel/virtual20-code.git"
 
-git clone "https://github.com/csinparallel/virtual20-code.git ${ROOTFS_DIR}/home/pi/CSinParallel"
+git clone https://github.com/csinparallel/virtual20-code.git "${ROOTFS_DIR}/home/pi/CSinParallel"
 on_chroot << EOF
 chown -R pi:pi "/home/pi/CSinParallel"
 EOF
