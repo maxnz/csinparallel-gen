@@ -17,7 +17,7 @@ This modification to `pi-gen` sets up everything for the CSinParallel image.
 - Clone `pi-gen` and this repository
 ```bash
 git clone https://github.com/RPi-Distro/pi-gen.git
-git clone https:/github.com/maxnz/csinparallel-gen.git
+git clone https://github.com/maxnz/csinparallel-gen.git
 ```
 
 - Install missing dependencies
