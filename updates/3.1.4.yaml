@@ -1,0 +1,9 @@
+- name: Update hd-image.bash
+  import_tasks: util/update_hd-image.yaml
+
+# Update version
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.1.4'

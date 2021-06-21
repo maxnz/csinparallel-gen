@@ -1,0 +1,63 @@
+# Add hd-image and updater
+
+- name: Add HD directory
+  become: yes
+  file:
+    path: /usr/HD
+    state: directory
+    mode: '0777'
+
+- name: Add hd-image
+  import_tasks: util/update_hd-image.yaml
+
+- name: Install hd-image
+  become: yes
+  file:
+    src: /usr/HD/hd-image.bash
+    path: /usr/bin/hd-image
+    state: link
+
+
+# /etc/owner
+
+- name: Create /etc/owner
+  become: yes
+  copy:
+    src: files/core/owner
+    dest: /etc/owner
+    mode: '0666'
+
+
+# Systemd service
+
+# - name: Create Updater service
+#   become: yes
+#   copy:
+#     src: files/services/Updater.service
+#     dest: /etc/systemd/system/Updater.service
+
+# - name: Enable Updater service
+#   become: yes
+#   systemd:
+#     name: Updater.service
+#     daemon-reload: yes
+#     enabled: yes
+
+
+# # Cron job
+
+# - name: Create Updater cron job
+#   become: yes
+#   cron:
+#     job: "/usr/bin/hd-image update"
+#     hour: 5
+#     minute: 0
+#     name: "Updater"
+
+
+# Version Update
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.0.1'

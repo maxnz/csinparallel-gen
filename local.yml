@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  remote_user: root
+  tasks:
+  - name: Updates
+    include_tasks: "{{ version_number }}"
+    when: imgVersion is version(version_number | regex_replace('/.*/') | regex_replace('.yaml'), '<')
+    loop: "{{ lookup('fileglob', 'updates/*.*.*.yaml').split(',') | version_sort }}"
+    loop_control:
+      loop_var: version_number

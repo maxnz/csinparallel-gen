@@ -1,0 +1,343 @@
+# Fix dhcpcd
+
+- name: Add subnet mask to eth0 interface
+  become: yes
+  blockinfile:
+    path: /etc/dhcpcd.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK ETH0"
+    block: |
+      interface eth0
+      metric 302
+      static ip_address=172.27.0.254/24
+      static routers=172.27.0.1
+      static domain_name_servers=172.27.0.1
+      nolink
+
+- name: Remove nolink from eth1 interface
+  become: yes
+  blockinfile:
+    path: /etc/dhcpcd.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK ETH1"
+    block: |
+      interface eth1
+      metric 301
+      timeout 0
+      static routers=172.27.1.1
+      static domain_name_servers=172.27.1.1
+
+- name: Apply dhcpcd change
+  become: yes
+  shell: dhcpcd -n eth1
+  ignore_errors: yes
+
+
+# Fix SSH security vulnerability
+
+- name: Remove SSH presets from 3.0.4
+  become: yes
+  file:
+    path: /etc/skel/.ssh
+    state: absent
+
+- name: Find all .ssh directories
+  become: yes
+  shell: find /home -mount -name .ssh
+  register: ssh_dirs
+
+- name: Remove cluster public key from all users
+  become: yes
+  file:
+    path: "{{ ssh_dir }}/pi_cluster_id_rsa.pub"
+    state: absent
+  with_items: "{{ ssh_dirs.stdout_lines }}"
+  loop_control:
+    loop_var: ssh_dir
+
+- name: Remove cluster private key from all users
+  become: yes
+  file:
+    path: "{{ ssh_dir }}/pi_cluster_id_rsa"
+    state: absent
+  with_items: "{{ ssh_dirs.stdout_lines }}"
+  loop_control:
+    loop_var: ssh_dir
+
+- name: Remove cluster key from authorized_keys files
+  become: yes
+  lineinfile:
+    path: "{{ ssh_dir }}/authorized_keys"
+    line: "# Cluster head node"
+    state: absent
+  with_items: "{{ ssh_dirs.stdout_lines }}"
+  loop_control:
+    loop_var: ssh_dir
+
+- name: Remove cluster key from authorized_keys files
+  become: yes
+  lineinfile:
+    path: "{{ ssh_dir }}/authorized_keys"
+    line: 'from="172.27.1.0/24" ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCcwrf2MFIFqxXTZvBAmSQn9IoJFh32crmXzJYeVIbobbHiaGhmfWK3CR5zSKiaBSm+MJG9clVwOPOMwNcCBMG5AazMFC7TVo/H+K2UChmV1r7xtCRFwmKYgaWsuDtf1LgEP/QswDkkFn1BzzUl7Q9SLI6lmrB6Jw4OSDBAB5dsPqWHq8DbpPH+FcN267lh14XVWckX5vklPdLESH344DqZMNLecy2Q4PUjHV+lsUVr0HndpdICl+mADqlTv9Nmn0Wf7fLEJT11po2WucENUe+lRacWHv0Zp+u7nU8lKRCR4k14FOXitimhqarSWMrS8YNpludlbpaqCEyVZ6cld3YPUMuPTBU+aZDRpqfR2Fx+E2pJ4n6b3zSg5VV6jnzP2du6i8vvOfCarRa0wsrUpTeNlwQ9b7JGDgixycAhaJ1bzUG3Wl8bRYsFRJcaxPf159QFnzYdq+CKKYg7jcAw6/tRgJKrzF2q+kjQOwUeU6Y+2DCXUAJ6rMDPwKcy4lX9w9M= cluster_headnode'
+    state: absent
+  with_items: "{{ ssh_dirs.stdout_lines }}"
+  loop_control:
+    loop_var: ssh_dir
+
+- name: Remove cluster key from config files
+  become: yes
+  blockinfile:
+    path: "{{ ssh_dir }}/config"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK CONFIG FILE"
+    state: absent
+  with_items: "{{ ssh_dirs.stdout_lines }}"
+  loop_control:
+    loop_var: ssh_dir
+
+
+# Create hd-cluster user
+
+- name: Create hd-cluster user
+  become: yes
+  user:
+    name: hd-cluster
+    uid: 1100
+    create_home: no
+
+- name: Remove /hd_cluster
+  become: yes
+  file:
+    path: /hd_cluster
+    state: absent
+
+- name: Create /hd-cluster
+  become: yes
+  file:
+    path: /hd-cluster
+    state: directory
+    owner: hd-cluster
+    group: hd-cluster
+    mode: '0755'
+
+- name: Copy .bash_logout to /hd-cluster
+  become: yes
+  copy:
+    src: /etc/skel/.bash_logout
+    dest: /hd-cluster/.bash_logout
+    owner: hd-cluster
+    group: hd-cluster
+
+# - name: Copy .bashrc to /hd-cluster
+#   become: yes
+#   copy:
+#     src: /etc/skel/.bashrc
+#     dest: /hd-cluster/.bashrc
+#     owner: hd-cluster
+#     group: hd-cluster
+
+- name: Copy .profile to /hd-cluster
+  become: yes
+  copy:
+    src: /etc/skel/.profile
+    dest: /hd-cluster/.profile
+    owner: hd-cluster
+    group: hd-cluster
+
+
+# Add SSH capabilities to hd-cluster
+
+- name: Add /hd-cluster/.ssh
+  become: yes
+  file:
+    path: /hd-cluster/.ssh
+    owner: hd-cluster
+    group: hd-cluster
+    state: directory
+
+- name: Create the authorized_keys file
+  become: yes
+  file:
+    path: /hd-cluster/.ssh/authorized_keys
+    owner: hd-cluster
+    group: hd-cluster
+    state: touch
+
+- name: Authorize key on cluster subnet
+  become: yes
+  authorized_key:
+    user: hd-cluster
+    path: /hd-cluster/.ssh/authorized_keys
+    state: present
+    key: "{{ lookup('file', 'files/cluster/pi_cluster_id_rsa.pub') }}"
+    key_options: 'from="172.27.1.0/24"'
+
+- name: Create ssh config file
+  become: yes
+  file:
+    path: /hd-cluster/.ssh/config
+    owner: hd-cluster
+    group: hd-cluster
+    state: touch
+
+- name: Set up the config file in /hd-cluster to use the right key
+  become: yes
+  blockinfile:
+    path: /hd-cluster/.ssh/config
+    marker: "# {mark} ANSIBLE MANAGED BLOCK CONFIG FILE"
+    block: |
+      Host 172.27.1.*
+        IdentityFile ~/.ssh/pi_cluster_id_rsa
+        StrictHostKeyChecking no
+      Host head
+        HostName 172.27.1.2
+        IdentityFile ~/.ssh/pi_cluster_id_rsa
+        StrictHostKeyChecking no
+
+- name: Create the pi_cluster_id_rsa file
+  become: yes
+  copy:
+    src: files/cluster/pi_cluster_id_rsa
+    dest: /hd-cluster/.ssh/pi_cluster_id_rsa
+    owner: hd-cluster
+    group: hd-cluster
+    mode: '0600'
+
+- name: Create the pi_cluster_id_rsa.pub file
+  become: yes
+  copy:
+    src: files/cluster/pi_cluster_id_rsa.pub
+    dest: /hd-cluster/.ssh/pi_cluster_id_rsa.pub
+    owner: hd-cluster
+    group: hd-cluster
+    mode: '0644'
+
+
+# Update CSinParallel Directories
+
+- name: Find all CSinParallel directories
+  become: yes
+  shell: find /home /hd-cluster /etc/skel -mount -name CSinParallel
+  register: csip_dirs
+
+
+- name: Set proper owner/group for CSinParallel dir
+  become: yes
+  shell: cd {{ csip_dir }} && chown -R $(stat .. -c %u:%g) . && cd -
+  with_items: "{{ csip_dirs.stdout_lines }}"
+  loop_control:
+    loop_var: csip_dir
+    
+
+- name: Set proper owner/group for CSinParallel dir
+  become: yes
+  shell: cd {{ csip_dir }} && chown -R $(stat .. -c %u:%g) . && cd -
+  with_items: "{{ csip_dirs.stdout_lines }}"
+  loop_control:
+    loop_var: csip_dir
+
+
+# autofs
+
+- name: Install autofs
+  become: yes
+  apt:
+    name: autofs
+
+- name: Configure auto.master
+  become: yes
+  lineinfile:
+    path: /etc/auto.master
+    line: /-      auto.cluster --timeout 0
+
+- name: Add auto.cluster
+  become: yes
+  copy:
+    src: files/cluster/auto.cluster
+    dest: /etc/auto.cluster
+
+- name: Restart autofs
+  become: yes
+  shell: systemctl restart autofs
+
+
+# Update node-change scripts
+
+- name: Add head-node.bash
+  become: yes
+  copy:
+    src: files/cluster/head-node.bash
+    dest: /usr/HD/head-node.bash
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install head-node.bash
+  become: yes
+  file:
+    src: /usr/HD/head-node.bash
+    path: /usr/local/bin/head-node
+    state: link
+
+- name: Add worker-node.bash
+  become: yes
+  copy:
+    src: files/cluster/worker-node.bash
+    dest: /usr/HD/worker-node.bash
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install worker-node.bash
+  become: yes
+  file:
+    src: /usr/HD/worker-node.bash
+    path: /usr/local/bin/worker-node
+    state: link
+
+- name: Add mpirun-auto-cluster.bash
+  become: yes
+  copy:
+    src: files/cluster/mpirun-auto-cluster.bash
+    dest: /usr/HD/mpirun-auto-cluster.bash
+    owner: hd-cluster
+    group: hd-cluster
+    mode: '0755'
+
+- name: Add soc-mpisetup.bash 
+  become: yes
+  copy:
+    src: files/cluster/soc-mpisetup.bash 
+    dest: /usr/HD/soc-mpisetup.bash 
+    owner: hd-cluster
+    group: hd-cluster
+    mode: '0755'
+
+- name: Install soc-mpisetup.bash 
+  become: yes
+  file:
+    src: /usr/HD/soc-mpisetup.bash
+    path: /usr/local/bin/soc-mpisetup
+    state: link
+
+
+- name: Add shutdown-workers.bash
+  become: yes
+  copy:
+    src: files/cluster/shutdown-workers.bash
+    dest: /usr/HD/shutdown-workers.bash
+    owner: root
+    group: root
+    mode: '0755'
+
+
+- name: Install shutdown-workers.bash
+  become: yes
+  file:
+    src: /usr/HD/shutdown-workers.bash
+    path: /usr/local/bin/shutdown-workers
+    state: link
+
+# Version Update
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.1.0'

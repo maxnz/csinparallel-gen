@@ -1,0 +1,36 @@
+- name: Update hd-image
+  import_tasks: ../update_hd-image.yaml
+  vars:
+    version: '2.0.3'
+
+- name: Update PiTracker
+  import_tasks: ../update_pitracker.yaml
+  vars:
+    version: '2.0.3'
+
+- name: Update PiTracker service
+  become: yes
+  replace:
+    path: /lib/systemd/system/PiTracker.service
+    regexp: "ExecStart=/usr/bin/hd-image --update"
+    replace: "ExecStart=/usr/bin/hd-image update"
+
+- name: Restart PiTracker service
+  become: yes
+  systemd:
+    name: PiTracker.service
+    daemon-reload: yes
+    enabled: yes
+
+- name: Update PiTracker cron job
+  become: yes
+  cron:
+    job: "/usr/bin/hd-image update"
+    hour: 5
+    minute: 0
+    name: "PiTracker"
+
+- name: Update version
+  import_tasks: ../update_version.yaml
+  vars:
+    version: '2.0.3'

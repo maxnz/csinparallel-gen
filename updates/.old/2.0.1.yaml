@@ -1,0 +1,16 @@
+- name: Create /etc/owner
+  become: yes
+  copy:
+    dest: /etc/owner
+    mode: '0666'
+    content: "None"
+
+- name: Fix hd-image
+  import_tasks: ../update_hd-image.yaml
+  vars:
+    version: '2.0.1'
+
+- name: Update version
+  import_tasks: ../update_version.yaml
+  vars:
+    version: '2.0.1'

@@ -1,0 +1,10 @@
+[Unit]
+Description=Update image and report to PiTracker server
+After=network-online.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/hd-image update
+
+[Install]
+WantedBy=multi-user.target

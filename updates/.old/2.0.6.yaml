@@ -1,0 +1,17 @@
+- name: Find all bashrc files
+  become: yes
+  shell: find /home /etc/skel -name .bashrc
+  register: bashrc
+
+- name: Update .bashrc
+  become: yes
+  replace:
+    path: "{{item}}"
+    regexp: "sudo rm /usr/HD/.updated;"
+    replace: "rm /usr/HD/.updated;"
+  with_items: "{{bashrc.stdout_lines}}"
+
+- name: Update version
+  import_tasks: ../update_version.yaml
+  vars:
+    version: '2.0.6'

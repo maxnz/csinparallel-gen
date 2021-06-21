@@ -1,0 +1,200 @@
+- name: Update hd-image.bash
+  import_tasks: util/update_hd-image.yaml
+
+
+# Install python3-gi-cairo
+- name: Installing python3-gi-cairo
+  apt:
+    name: python3-gi-cairo
+    state: present
+
+
+# Remove old CSinParallel dirs
+
+- name: Remove old CSinParallel directory from /etc/skel
+  become: yes
+  file:
+    path: /etc/skel/CSinParallel
+    state: absent
+
+
+# Add the latest CSinParallel files to /etc/skel
+
+- name: Add latest CSinParallel directory to /etc/skel
+  become: yes
+  copy:
+    src: files/CSinParallel
+    dest: /etc/skel
+
+
+# Remove CSinParallel dir from /hd-cluster
+
+- name: Remove old CSinParallel directory from /hd-cluster
+  become: yes
+  file:
+    path: /hd-cluster/CSinParallel
+    state: absent
+
+
+# Add new CSinParallel dir
+- name: Copy CSinParallel to /hd-cluster
+  become: yes
+  copy:
+    src: files/CSinParallel
+    dest: /hd-cluster
+
+
+- name: Copy CSinParallel to /home/pi
+  become: yes
+  copy:
+    src: files/CSinParallel
+    dest: /home/pi
+
+
+# Give correct ownership for CSinParallel in hd-cluster
+
+- name: Give correct ownership for CSinParallel in /hd-cluster
+  become: yes
+  file:
+    path: /hd-cluster
+    owner: hd-cluster
+    group: hd-cluster
+    state: directory
+    recurse: yes
+
+
+- name: Give correct ownership for CSinParallel in /hd-cluster/CSinParallel
+  become: yes
+  file:
+    path: /hd-cluster/CSinParallel
+    owner: hd-cluster
+    group: hd-cluster
+    state: directory
+    recurse: yes
+
+
+- name: Give correct ownership for CSinParallel in /home/pi/CSinParallel
+  become: yes
+  file:
+    path: /home/pi/CSinParallel
+    owner: pi
+    group: pi
+    state: directory
+    recurse: yes
+
+
+- name: Give correct ownership for CSinParallel in /home/hd-cluster
+  become: yes
+  file:
+    path: /home/hd-cluster/CSinParallel
+    owner: hd-cluster
+    group: hd-cluster
+    state: directory
+    recurse: yes
+
+
+# Add new soc, worker files
+
+- name: Add soc-hostname.c 
+  become: yes
+  copy:
+    src: files/cluster/soc-hostname.c
+    dest: /usr/HD/soc-hostname.c
+    owner: root
+    group: root
+    mode: '644'
+
+- name: Compile soc-hostname.c
+  shell: 
+    cmd: | 
+      cd /usr/HD
+      gcc -o soc-hostname soc-hostname.c 
+      chown root:hd-cluster soc-hostname 
+      chmod 750 soc-hostname
+      chmod u+s soc-hostname 
+
+
+# Find all accounts on the /home directory
+
+- name: Find all accounts on the /home directory
+  become: yes 
+  shell: ls /home
+  register: home_dirs
+
+
+# show cluster node IP address 
+- name: Copy show_node_ip.sh to /etc/profile 
+  become: yes
+  copy: 
+    src: files/profile.d/show_node_ip.sh
+    dest: /etc/profile.d/show_node_ip.sh
+    owner: root
+    group: root
+    mode: '0777'
+
+
+# Remove old bashrc files 
+
+- name: Remove old .bashrc files for /home/pi, /home/hd-cluster, /etc/skel
+  become: yes 
+  file:
+    path: "{{item.user}}"
+    state: absent
+  loop:
+  - { user: "/home/pi/.bashrc" }
+  - { user: "/hd-cluster/.bashrc" }
+  - { user: "/etc/skel/.bashrc"  } 
+
+# Add new bashrc files 
+- name: Add .bashrc files for /home/pi, /home/hd-cluster, /etc/skel
+  become: yes 
+  copy:
+    src: files/cluster/bashrc
+    dest: "{{item.user}}"
+    owner: "{{item.the_owner}}" 
+    group: "{{item.the_group}}"
+    mode: '644'
+  loop:
+  - { user: "/home/pi/.bashrc", the_owner: "pi", the_group: "pi"}
+  - { user: "/hd-cluster/.bashrc", the_owner: "hd-cluster", the_group: "hd-cluster"}
+  - { user: "/etc/skel/.bashrc", the_owner: "root", the_group: "root"} 
+
+
+# Reinstall mpirun-auto-cluster.bash for 
+
+- name: Install mpirun-auto-cluster.bash
+  become: yes
+  file:
+    src: /usr/HD/mpirun-auto-cluster.bash
+    path: /usr/local/bin/mpirun-auto-cluster
+    state: link
+
+
+# To build and set protection on soc-hostname
+
+- name: Build and set protection on soc-hostname
+  become: yes
+  shell:
+    cmd: | 
+      cd /usr/local/bin/
+      gcc -o soc-hostname /usr/HD/soc-hostname.c
+      chown hd-cluster:hd-cluster /usr/HD/soc-hostname.c
+      chmod 750 soc-hostname
+      chmod u+s soc-hostname
+
+
+# Set Python3 as the default 
+- name: Set Python3 as the default 
+  alternatives:
+    name: python
+    link: /usr/bin/python
+    path: /usr/bin/python3
+    priority: 10
+
+
+# Update version
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.1.5'

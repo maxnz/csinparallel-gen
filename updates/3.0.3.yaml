@@ -1,0 +1,67 @@
+#=================================================================================================#
+#     COMMENTED OUT CHANGES; THEY ARE NOW BEING HANDLED IN 3.1.5; WILL FIX FOR FALL22 HD-IMAGE    #
+#=================================================================================================#
+
+
+# Find all accounts on the /home directory
+
+# - name: Find all accounts on the /home directory
+#   become: yes 
+#   shell: ls /home
+#   register: home_dirs
+
+
+# Find all CSinParallel dirs (for older images)
+
+# - name: Find all CSinParallel directories (for older images)
+#   become: yes
+#   shell: find /home /hd-cluster /etc/skel -mount -name CSinParallel
+#   register: csip_dirs
+
+
+# Rename existing CSinParallel directory
+
+# - name: Rename existing CSinParallel directory
+#   become: yes
+#   shell: mv {{csip_dir}} CSinParallel-old
+#   with_items: "{{ csip_dirs.stdout_lines }}"
+#   loop_control:
+#     loop_var: csip_vars
+
+
+# Remove CSinParallel dir from /etc/skel
+
+# - name: Remove old CSinParallel directory to /etc/skel
+#   become: yes
+#   file:
+#     path: /etc/skel/CSinParallel
+#     state: absent
+
+
+# Add the latest CSinParallel directory to home directories
+
+# - name: Add latest CSinParallel directory to /home directories 
+#   become: yes
+#   git:
+#     repo: "git@stogit.cs.stolaf.edu:hd/hd-tas/hd-image/v21-csinparallel.git"
+#     dest: {{home_dir}}
+#     with_items: "{{ home_dirs.stdout_lines }}"
+#     loop_control:
+#       loop_var: home_dirs
+
+
+# Add the latest CSinParallel files to /etc/skel
+
+# - name: Add latest CSinParallel directory to /etc/skel
+#   become: yes
+#   git:
+#     repo: "git@stogit.cs.stolaf.edu:hd/hd-tas/hd-image/v21-csinparallel.git"
+#     dest: /etc/skel
+
+
+# Version Update
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars: 
+    version: '3.0.3'

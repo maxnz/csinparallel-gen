@@ -1,0 +1,32 @@
+- name: Configure DHCP server service
+  become: yes
+  file:
+    path: /etc/systemd/system/isc-dhcp-server.service.d
+    state: directory
+    mode: "755"
+
+- name: Configure DHCP server service
+  become: yes
+  copy:
+    src: files/services/restart.conf
+    dest: /etc/systemd/system/isc-dhcp-server.service.d/restart.conf
+    mode: "644"
+
+- name: Configure DHCP service
+  become: yes
+  file:
+    path: /etc/systemd/system/dhcpcd.service.d
+    state: directory
+    mode: "755"
+
+- name: Configure DHCP service
+  become: yes
+  copy:
+    src: files/services/restart.conf
+    dest: /etc/systemd/system/dhcpcd.service.d/restart.conf
+    mode: "644"
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.1.2'

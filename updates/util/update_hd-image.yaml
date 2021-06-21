@@ -1,0 +1,15 @@
+# Task file for updating the hd-image.bash file
+# Usage:
+# Update the hd-image.bash file in files
+# Add to your update tasks:
+# - name: Update hd-image
+#   import_tasks: util/update_hd-image.yaml
+
+- name: Update hd-image
+  become: yes
+  copy: 
+    src: files/core/hd-image.bash
+    dest: /usr/HD/hd-image.bash
+    owner: root
+    group: root
+    mode: '0777'

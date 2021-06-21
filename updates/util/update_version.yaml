@@ -1,0 +1,21 @@
+# Task file for updating the version
+# This should be included at the end of every update file
+# Usage:
+# - name: Update Version
+#   import_tasks: util/update_version.yaml
+#   vars:
+#     version: 'your_version'
+
+- name: Update version
+  become: yes
+  copy: 
+    dest: /usr/HD/version
+    mode: '0666'
+    content: "{{ version }}"
+
+- name: Notify updated
+  become: yes
+  file:
+    path: /usr/HD/.updated
+    state: touch
+    mode: '0666'

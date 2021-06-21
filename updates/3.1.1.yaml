@@ -1,0 +1,79 @@
+- name: Update head-node.bash
+  become: yes
+  copy:
+    src: files/cluster/head-node.bash
+    dest: /usr/HD/head-node.bash
+    owner: root
+    group: root
+    mode: '0744'
+
+- name: Update mpirun-auto-cluster.bash
+  become: yes
+  copy:
+    src: files/cluster/mpirun-auto-cluster.bash
+    dest: /usr/HD/mpirun-auto-cluster.bash
+    owner: hd-cluster
+    group: hd-cluster
+    mode: '0755'
+
+- name: Update hd-image.bash
+  include_tasks: util/update_hd-image.yaml
+
+- name: Find all bashrc files
+  become: yes
+  shell: find /home /etc/skel /hd-cluster -mount -name .bashrc
+  register: bashrc
+
+- name: "Remove ./bashrc /etc/owner check (username)"
+  become: yes
+  blockinfile:
+    path: "{{ bashrc_file }}"
+    marker: "# {mark} ANSIBLE MANAGED /etc/owner CHECK (username)"
+    state: absent
+  with_items: "{{ bashrc.stdout_lines }}"
+  loop_control:
+    loop_var: bashrc_file
+
+- name: "Remove ./bashrc /etc/owner check (None)"
+  become: yes
+  blockinfile:
+    path: "{{ bashrc_file }}"
+    marker: "# {mark} ANSIBLE MANAGED /etc/owner CHECK (None)"
+    state: absent
+  with_items: "{{ bashrc.stdout_lines }}"
+  loop_control:
+    loop_var: bashrc_file
+
+- name: Add ownercheck.sh
+  become: yes
+  copy:
+    src: files/profile.d/ownercheck.sh
+    dest: /etc/profile.d/ownercheck.sh
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Remove update check
+  become: yes
+  blockinfile:
+    path: "{{ bashrc_file }}"
+    marker: "# {mark} ANSIBLE MANAGED UPDATE CHECK"
+  with_items: "{{ bashrc.stdout_lines }}"
+  loop_control:
+    loop_var: bashrc_file
+
+- name: Add alertversion.sh
+  become: yes
+  copy:
+    src: files/profile.d/alertversion.sh
+    dest: /etc/profile.d/alertversion.sh
+    owner: root
+    group: root
+    mode: '0644'
+
+# Version Update
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.1.1'

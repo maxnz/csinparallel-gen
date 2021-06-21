@@ -1,0 +1,40 @@
+# Packages
+
+- name: Upgrade packages
+  become: yes
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Install necessary packages
+  become: yes
+  apt:
+    name:
+    - isc-dhcp-server
+    - vim
+    - emacs
+    - cowsay
+    - sl
+    - fping
+    - nfs-kernel-server
+    - ntp
+    - openmpi-bin
+    - openmpi-common
+    - libopenmpi3
+    - libopenmpi-dev
+<<<<<<< HEAD
+    - nmap
+    - golang
+=======
+    - openjdk-11-jdk
+    - golang
+    - nmap
+>>>>>>> 91a9cbd5a0fee9f2945dddc776b8ca89d4d7fba9
+
+
+# Version Update
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.0.0'

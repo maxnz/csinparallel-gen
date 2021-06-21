@@ -1,0 +1,23 @@
+- name: Find all bashrc files
+  become: yes
+  shell: find /home /etc/skel -name .bashrc
+  register: bashrc
+
+- name: Update .bashrc
+  become: yes
+  lineinfile:
+    path: "{{item}}"
+    line: "NAME=`cat /etc/owner`; if [[ $NAME == \"None\" ]]; then echo \"/etc/owner still contains \\\"None\\\". Please update it by running\"; echo \"    echo username > /etc/owner\"; echo \"(where username is your username)\"; fi"
+  with_items: "{{bashrc.stdout_lines}}"
+
+- name: Update .bashrc
+  become: yes
+  lineinfile:
+    path: "{{item}}"
+    line: "NAME=`cat /etc/owner`; if [[ $NAME == \"username\" ]]; then echo \"/etc/owner contains \\\"username\\\". We don't believe this is a valid username.\"; echo \"Please update it by running\"; echo \"    echo username > /etc/owner\"; echo \"(where username is YOUR username)\"; fi"
+  with_items: "{{bashrc.stdout_lines}}"
+
+- name: Update version
+  import_tasks: ../update_version.yaml
+  vars:
+    version: '2.0.5'

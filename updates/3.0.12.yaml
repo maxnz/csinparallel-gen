@@ -1,0 +1,24 @@
+# Modify cron jobs
+
+- name: Fix Report cron job
+  become: yes
+  cron:
+    job: "/usr/bin/hd-image report | /usr/bin/logger -t PiTracker"
+    hour: "*/3"
+    minute: "0"
+    name: "Report"
+
+# - name: Update Updater cron job
+#   become: yes
+#   cron:
+#     job: "/usr/bin/hd-image update | /usr/bin/logger -t Updater"
+#     hour: "5"
+#     minute: "0"
+#     name: "Updater"
+
+# Update version
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.0.12'

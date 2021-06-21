@@ -1,0 +1,1 @@
+/home/hd-cluster        -fstype=nfs     172.27.1.2:/hd-cluster

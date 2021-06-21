@@ -1,0 +1,28 @@
+- name: Download MPE
+  become: yes
+  unarchive:
+    remote_src: yes
+    src: ftp://ftp.mcs.anl.gov/pub/mpi/mpe/mpe2.tar.gz
+    dest: /tmp
+
+- name: Find MPE directory
+  become: yes
+  shell: find /tmp -maxdepth 1 -name mpe2-*
+  register: mpe_dir
+
+- name: Configure MPE
+  become: yes
+  shell: 
+    cmd: ./configure CC=gcc MPI_CC=mpicc --disable-f77 --prefix=/usr --with-mpiinc="-I/usr/lib/arm-linux-gnueabihf/openmpi/include" --with-mpilibs="-L/usr/lib/arm-linux-gnueabihf/openmpi/lib/"
+    chdir: "{{ mpe_dir.stdout }}"
+
+- name: Make MPE
+  become: yes
+  make:
+    chdir: "{{ mpe_dir.stdout }}"
+
+- name: Install MPE
+  become: yes
+  make:
+    chdir: "{{ mpe_dir.stdout }}"
+    target: install

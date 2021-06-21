@@ -1,0 +1,13 @@
+- name: Fix ownercheck.sh
+  become: yes
+  copy:
+    src: files/profile.d/ownercheck.sh
+    dest: /etc/profile.d/ownercheck.sh
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Update version
+  import_tasks: util/update_version.yaml
+  vars:
+    version: '3.1.3'

@@ -1,0 +1,7 @@
+# To use with several hosts on a cluster, edit this file to add their names or ip addresses
+#localhost
+head
+node1
+node2
+node3
+

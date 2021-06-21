@@ -1,0 +1,12 @@
+- name: Change /usr/HD permissions
+  become: yes
+  file:
+    path: /usr/HD
+    state: directory
+    mode: '0777'
+
+- name: Update version
+  import_tasks: ../update_version.yaml
+  
+  vars:
+    version: '2.0.7'

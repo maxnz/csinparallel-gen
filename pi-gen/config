@@ -1,5 +1,42 @@
-# The Summer 2021 branch
+export ANSIBLE_BRANCH="master"
 
-IMG_NAME="csip-image-3.0.2"
+IMG_NAME="hd-image-$(./get-latest-version.bash $ANSIBLE_BRANCH)"
+TIMEZONE_DEFAULT="America/Chicago"
+LOCALE_DEFAULT="en_US.UTF-8"
+WPA_ESSID="St. Olaf Guest"
+WPA_COUNTRY="US"
 ENABLE_SSH=1
 
+echo -n "Checking for admin_pass file..."
+if ! [ -f admin_pass ]
+then
+    echo -e "\e[31merror\e[0m"
+    echo "Please create a new file called admin_pass"
+    echo "File should contain 'export ADMIN_PASS=\"\"' with the admin password in the quotes"
+    exit 1
+else
+    echo -e "\e[32mfound\e[0m"
+fi
+
+source admin_pass
+
+echo -n "Checking that \$ADMIN_PASS is populated..."
+if [ -z "$ADMIN_PASS" ]
+then
+    echo -e "\e[31merror\e[0m"
+    echo "ADMIN_PASS must be populated in admin_pass"
+    echo "File should contain 'export ADMIN_PASS=\"\"' with the password in the quotes"
+    exit 1
+else
+    echo -e "\e[32mconfirmed\e[0m"
+fi
+
+echo -n "Checking that \$ADMIN_PASS is exported..."
+if [ -z "$(bash -c 'echo ${ADMIN_PASS}')" ]
+then
+    echo -e "\e[31merror\e[0m"
+    echo "Make sure ADMIN_PASS is exported using 'export ADMIN_PASS=\"\"'"
+    exit 1
+else
+    echo -e "\e[32mconfirmed\e[0m"
+fi
